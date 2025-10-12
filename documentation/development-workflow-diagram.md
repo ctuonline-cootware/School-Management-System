@@ -30,7 +30,7 @@ graph TD
   subgraph Evergreen Branches
     D1[dev - Developer Work]
     T1[test - QA & Validation]
-    DOC1[documentation -&#10;Analyst Contributions]
+    DOC1[documentation -#10;Analyst Contributions]
     M1[main - Production Ready]
   end
 
