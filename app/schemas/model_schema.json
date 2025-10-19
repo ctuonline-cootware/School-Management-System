@@ -1,0 +1,437 @@
+[
+  {
+    "table": "assignment",
+    "columns": [
+      {
+        "name": "assignment_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "start_date",
+        "type": "DATE",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "is_active",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "max_points",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "end_date",
+        "type": "DATE",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "course",
+    "columns": [
+      {
+        "name": "course_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "start_date",
+        "type": "DATE",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "end_date",
+        "type": "DATE",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "is_active",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "department",
+    "columns": [
+      {
+        "name": "department_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "job",
+    "columns": [
+      {
+        "name": "job_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "start_date",
+        "type": "DATE",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "is_active",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "is_management",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "end_date",
+        "type": "DATE",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "academic_program",
+    "columns": [
+      {
+        "name": "program_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "department",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "degree_type",
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "faculty",
+    "columns": [
+      {
+        "name": "faculty_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "first_name",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "last_name",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "hire_date",
+        "type": "DATE",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "department_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "job_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "term_date",
+        "type": "DATE",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "course_instance",
+    "columns": [
+      {
+        "name": "instance_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "course_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "faculty_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "term",
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "start_date",
+        "type": "DATE",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "location",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "end_date",
+        "type": "DATE",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "program_course_requirement",
+    "columns": [
+      {
+        "name": "requirement_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "program_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "course_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "requirement_type",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "version",
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "student",
+    "columns": [
+      {
+        "name": "student_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "first_name",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "last_name",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "start_date",
+        "type": "DATE",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "expected_graduation_date",
+        "type": "DATE",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "program_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "end_date",
+        "type": "DATE",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "course_assignment",
+    "columns": [
+      {
+        "name": "course_assignment_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "instance_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "assignment_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "student_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "points_earned",
+        "type": "INTEGER",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "letter_grade",
+        "type": "VARCHAR(5)",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  }
+]
