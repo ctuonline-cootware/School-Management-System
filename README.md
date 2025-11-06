@@ -34,8 +34,70 @@ psql -U postgres -f "sql/reset.sql"
 
 ---
 
+### Starting the API (manual)
+
+This is a POC — no secret management is used. Use the local dev DB credentials from the SQL files when initializing the database.
+
+1. Create & activate a virtual environment
+
+PowerShell:
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+CMD:
+```cmd
+python -m venv .venv
+.\.venv\Scripts\activate
+```
+
+2. Install dependencies
+```powershell
+pip install -r requirements.txt
+```
+
+3. (Optional) Initialize or reset the database
+```powershell
+psql -U postgres -f "sql/init.sql"
+psql -U dev_user -d school_management -f "sql/data-model.sql"
+# or reset:
+psql -U postgres -f "sql/reset.sql"
+```
+
+4. Start the server (development)
+```powershell
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Open in your browser:
+- http://127.0.0.1:8000/docs (Swagger UI)
+- http://127.0.0.1:8000/redoc
+- http://127.0.0.1:8000/openapi.json
+
+
+> Note: VS Code Debug configuration will also activate the venv and run uvicorn if you prefer the debugger workflow.
+
+![VS Code Debugger](./documentation/Debugger_Screenshot.png)
+
+### Generating the Code
+
+#### SQL Alchemy Models
+
+OPTIONAL: this can be run to refresh the SQL Alchemy ORM models if there are changes in the database (run from project root): 
+* sqlacodegen postgresql://dev_user:cs491@localhost:5432/school_management --schema school --outfile app/models/item.py
+
+#### Pydantic Models
+
+OPTIONAL: this can be run to refresh the Pydantic API models if there are any changes in the database (run from project root):
+* datamodel-codegen --input .\app\models\item.py --input-file-type python --output .\app\schemas\schemas.py
+* datamodel-codegen --input .\app\schemas\model_schema.json --input-file-type json --output .\app\schemas\generated_models.py
+
+---
+
 ### 🧰 VS Code Integration
 
+#### PostgreSQL
 1. Install the **PostgreSQL extension** (by Microsoft)
 2. Press `Ctrl + Shift + P` → PostgreSQL: Add Connection
 3. Use these settings:
@@ -50,6 +112,13 @@ psql -U postgres -f "sql/reset.sql"
   "password": "cs491"
 }
 ```
+
+#### Python Linting Errors
+If you are getting pylance warnings with your imports resolving, make sure your interpreter is changed to the venv:
+
+Ctrl + shift + p > Python: Select Interpreter
+
+<img src="documentation/Interpreter_Screenshot.png" width="50%" height="200px" alt="VS Code Command Palette">
 
 ## Diagrams
 
