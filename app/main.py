@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api.v1.endpoints import items, assignments, courses
+from app.api.v1.endpoints import assignments, courses
 
 app = FastAPI(
     title="School Management - API",
@@ -9,6 +9,5 @@ app = FastAPI(
     openapi_url="/openapi.json", # OpenAPI schema URL
 )
 
-app.include_router(items.router, prefix="/items", tags=["items"])
 app.include_router(assignments.router, prefix="/assignments", tags=["assignments"])
 app.include_router(courses.router, prefix="/courses", tags=["courses"])

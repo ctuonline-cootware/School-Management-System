@@ -4,7 +4,7 @@ from app.core.config import settings
 
 # create engine; let SQLAlchemy choose driver options
 connect_args = {}
-if settings.DATABASE_URL.startswith("sqlite"):
+if settings.DATABASE_URL is not None and settings.DATABASE_URL.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
 
 engine = create_engine(settings.DATABASE_URL, connect_args=connect_args)

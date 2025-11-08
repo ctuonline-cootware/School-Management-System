@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_db
-from app.models.item import Course as CourseModel
+from app.models.sqlalchemy_models import Course as CourseModel
 from app.schemas.generated_models import Course, CourseCreate, CourseUpdate
 
 router = APIRouter()

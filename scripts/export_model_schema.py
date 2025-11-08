@@ -18,7 +18,7 @@ for filename in os.listdir(model_path):
         importlib.import_module(module_name)
 
 
-from app.models.item import Base, Assignment, Course, Department, Job, \
+from app.models.sqlalchemy_models import Base, Assignment, Course, Department, Job, \
                             AcademicProgram, Faculty, CourseAssignment, \
                             CourseInstance, ProgramCourseRequirement, Student
 

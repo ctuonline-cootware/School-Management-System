@@ -85,12 +85,12 @@ Open in your browser:
 #### SQL Alchemy Models
 
 OPTIONAL: this can be run to refresh the SQL Alchemy ORM models if there are changes in the database (run from project root): 
-* sqlacodegen postgresql://dev_user:cs491@localhost:5432/school_management --schema school --outfile app/models/item.py
+* sqlacodegen postgresql://dev_user:cs491@localhost:5432/school_management --schema school --outfile app/models/sqlalchemy_models.py
 
 #### Pydantic Models
 
 OPTIONAL: this can be run to refresh the Pydantic API models if there are any changes in the database (run from project root):
-* datamodel-codegen --input .\app\models\item.py --input-file-type python --output .\app\schemas\schemas.py
+* datamodel-codegen --input .\app\models\sqlalchemy_models.py --input-file-type python --output .\app\schemas\schemas.py
 * datamodel-codegen --input .\app\schemas\model_schema.json --input-file-type json --output .\app\schemas\generated_models.py
 
 ---
