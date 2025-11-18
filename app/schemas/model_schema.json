@@ -153,6 +153,58 @@
     ]
   },
   {
+    "table": "roles",
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "TEXT",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
+    "table": "users",
+    "columns": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "primary_key": true,
+        "default": null
+      },
+      {
+        "name": "username",
+        "type": "TEXT",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "password_hash",
+        "type": "TEXT",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "is_active",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "primary_key": false,
+        "default": null
+      }
+    ]
+  },
+  {
     "table": "academic_program",
     "columns": [
       {

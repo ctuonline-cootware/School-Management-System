@@ -80,6 +80,38 @@ class Job(JobBase):
     class Config:
         orm_mode = True
 
+class RolesBase(BaseModel):
+    name: str
+
+class RolesCreate(RolesBase):
+    pass
+
+class RolesUpdate(BaseModel):
+    name: Optional[str] = None
+
+class Roles(RolesBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+class UsersBase(BaseModel):
+    username: str
+    password_hash: str
+    is_active: Optional[bool]
+
+class UsersCreate(UsersBase):
+    pass
+
+class UsersUpdate(BaseModel):
+    username: Optional[str] = None
+    password_hash: Optional[str] = None
+    is_active: Optional[bool] = None
+
+class Users(UsersBase):
+    id: int
+    class Config:
+        orm_mode = True
+
 class AcademicProgramBase(BaseModel):
     name: str
     department: int

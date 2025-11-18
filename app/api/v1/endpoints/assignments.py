@@ -1,13 +1,14 @@
 # app/routers/assignment.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from app.core.security import get_current_user
 from app.db.session import get_db
 from app.models.sqlalchemy_models import Assignment as AssignmentModel
 from app.schemas.generated_models import Assignment, AssignmentCreate, AssignmentUpdate
 
 router = APIRouter()
 
-@router.get("/", response_model=list[Assignment])
+@router.get("/", response_model=list[Assignment], dependencies=[Depends(get_current_user)])
 def list_assignments(db: Session = Depends(get_db)):
     return db.query(AssignmentModel).all()
 

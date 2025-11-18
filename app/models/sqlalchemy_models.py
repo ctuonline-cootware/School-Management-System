@@ -1,8 +1,12 @@
 from typing import Optional
 import datetime
-from app.db.base import Base
-from sqlalchemy import Boolean, Date, ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from sqlalchemy import Boolean, Column, Date, ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Table, Text, UniqueConstraint, text
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+class Base(DeclarativeBase):
+    pass
+
 
 class Assignment(Base):
     __tablename__ = 'assignment'
@@ -69,6 +73,36 @@ class Job(Base):
     faculty: Mapped[list['Faculty']] = relationship('Faculty', back_populates='job')
 
 
+class Roles(Base):
+    __tablename__ = 'roles'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='roles_pkey'),
+        UniqueConstraint('name', name='roles_name_key'),
+        {'schema': 'school'}
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+
+    user: Mapped[list['Users']] = relationship('Users', secondary='school.user_roles', back_populates='role')
+
+
+class Users(Base):
+    __tablename__ = 'users'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='users_pkey'),
+        UniqueConstraint('username', name='users_username_key'),
+        {'schema': 'school'}
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(Text, nullable=False)
+    password_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    is_active: Mapped[Optional[bool]] = mapped_column(Boolean, server_default=text('true'))
+
+    role: Mapped[list['Roles']] = relationship('Roles', secondary='school.user_roles', back_populates='user')
+
+
 class AcademicProgram(Base):
     __tablename__ = 'academic_program'
     __table_args__ = (
@@ -107,6 +141,17 @@ class Faculty(Base):
     department: Mapped['Department'] = relationship('Department', back_populates='faculty')
     job: Mapped['Job'] = relationship('Job', back_populates='faculty')
     course_instance: Mapped[list['CourseInstance']] = relationship('CourseInstance', back_populates='faculty')
+
+
+t_user_roles = Table(
+    'user_roles', Base.metadata,
+    Column('user_id', Integer, primary_key=True),
+    Column('role_id', Integer, primary_key=True),
+    ForeignKeyConstraint(['role_id'], ['school.roles.id'], name='user_roles_role_id_fkey'),
+    ForeignKeyConstraint(['user_id'], ['school.users.id'], name='user_roles_user_id_fkey'),
+    PrimaryKeyConstraint('user_id', 'role_id', name='user_roles_pkey'),
+    schema='school'
+)
 
 
 class CourseInstance(Base):

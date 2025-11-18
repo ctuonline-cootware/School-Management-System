@@ -34,6 +34,14 @@ psql -U postgres -f "sql/reset.sql"
 
 ---
 
+### Setup JWT Secret
+
+Run this locally to generate your local secret; copy the results and update .env
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
 ### Starting the API (manual)
 
 This is a POC — no secret management is used. Use the local dev DB credentials from the SQL files when initializing the database.
