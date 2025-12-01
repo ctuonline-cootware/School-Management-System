@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from app.core.security import create_access_token, get_password_hash
+from app.core.security import create_access_token, get_password_hash, verify_password
 from app.core.config import settings
 from app.db.session import get_db
 from app.models.sqlalchemy_models import Users as UsersModel
@@ -20,19 +20,22 @@ def authenticate_user(username: str, password: str, db: Session = Depends(get_db
             "username": "demo", 
             "roles": ["admin"]
         }
-
-    hashed_pasword = get_password_hash(password)
-    obj = db.query(UsersModel).filter(UsersModel.username == username, UsersModel.password_hash == hashed_pasword).first()
-    if obj is None:
+    
+    # validate we have a user with that name
+    user = db.query(UsersModel).filter(UsersModel.username == username).first()
+    if user is None:
         return None
     
+    # confirm we were given the correct password
+    if not verify_password(password, user.password_hash):
+        return None
+
+    # return user info if validated
     return {
-        "id": obj.id,
-        "username": obj.username,
-        "roles": [role.role_name for role in obj.roles]  # assuming a relationship 'roles' exists
+        "id": user.id,
+        "username": user.username,
+        "roles": [role.role_name for role in user.roles]  # assuming a relationship 'roles' exists
     }
-    
-    return None
 
 @router.post("/token")
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, Any
 from datetime import datetime
 
@@ -29,6 +29,9 @@ class CourseBase(BaseModel):
     start_date: datetime
     end_date: Optional[datetime]
     is_active: Optional[bool]
+    code: str
+    description: str
+    credits: float
 
 class CourseCreate(CourseBase):
     pass
@@ -96,16 +99,18 @@ class Roles(RolesBase):
 
 class UsersBase(BaseModel):
     username: str
-    password_hash: str
     is_active: Optional[bool]
 
 class UsersCreate(UsersBase):
-    pass
+    password: str = Field(..., min_length=12, example="strongpassword123")
+    roles: list[int] = []
+
 
 class UsersUpdate(BaseModel):
     username: Optional[str] = None
-    password_hash: Optional[str] = None
+    password: Optional[str] = Field(..., min_length=12, example="strongpassword123")
     is_active: Optional[bool] = None
+    roles: Optional[list[int]] = []
 
 class Users(UsersBase):
     id: int
@@ -137,6 +142,7 @@ class FacultyBase(BaseModel):
     department_id: int
     job_id: int
     term_date: Optional[datetime]
+    email_address: Optional[str]
 
 class FacultyCreate(FacultyBase):
     pass
@@ -148,6 +154,7 @@ class FacultyUpdate(BaseModel):
     department_id: Optional[int] = None
     job_id: Optional[int] = None
     term_date: Optional[datetime] = None
+    email_address: Optional[str] = None
 
 class Faculty(FacultyBase):
     faculty_id: int
@@ -205,6 +212,7 @@ class StudentBase(BaseModel):
     expected_graduation_date: datetime
     program_id: int
     end_date: Optional[datetime]
+    email_address: Optional[str]
 
 class StudentCreate(StudentBase):
     pass
@@ -216,6 +224,7 @@ class StudentUpdate(BaseModel):
     expected_graduation_date: Optional[datetime] = None
     program_id: Optional[int] = None
     end_date: Optional[datetime] = None
+    email_address: Optional[str] = None
 
 class Student(StudentBase):
     student_id: int

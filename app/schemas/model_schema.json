@@ -83,6 +83,27 @@
         "nullable": true,
         "primary_key": false,
         "default": null
+      },
+      {
+        "name": "code",
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "description",
+        "type": "TEXT",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
+      },
+      {
+        "name": "credits",
+        "type": "DECIMAL(2,1)",
+        "nullable": false,
+        "primary_key": false,
+        "default": null
       }
     ]
   },

@@ -37,6 +37,9 @@ class Course(Base):
     start_date: Mapped[datetime.date] = mapped_column(Date, nullable=False)
     end_date: Mapped[Optional[datetime.date]] = mapped_column(Date)
     is_active: Mapped[Optional[bool]] = mapped_column(Boolean)
+    code: Mapped[str] = mapped_column(String(20), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    credits: Mapped[float] = mapped_column(Integer, nullable=False)
 
     course_instance: Mapped[list['CourseInstance']] = relationship('CourseInstance', back_populates='course')
     program_course_requirement: Mapped[list['ProgramCourseRequirement']] = relationship('ProgramCourseRequirement', back_populates='course')
@@ -137,6 +140,7 @@ class Faculty(Base):
     department_id: Mapped[int] = mapped_column(Integer, nullable=False)
     job_id: Mapped[int] = mapped_column(Integer, nullable=False)
     term_date: Mapped[Optional[datetime.date]] = mapped_column(Date)
+    email_address: Mapped[Optional[str]] = mapped_column(String(100))
 
     department: Mapped['Department'] = relationship('Department', back_populates='faculty')
     job: Mapped['Job'] = relationship('Job', back_populates='faculty')
@@ -210,6 +214,7 @@ class Student(Base):
     expected_graduation_date: Mapped[datetime.date] = mapped_column(Date, nullable=False)
     program_id: Mapped[int] = mapped_column(Integer, nullable=False)
     end_date: Mapped[Optional[datetime.date]] = mapped_column(Date)
+    email_address: Mapped[Optional[str]] = mapped_column(String(100))
 
     program: Mapped['AcademicProgram'] = relationship('AcademicProgram', back_populates='student')
     course_assignment: Mapped[list['CourseAssignment']] = relationship('CourseAssignment', back_populates='student')
