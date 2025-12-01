@@ -39,18 +39,30 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> Dict[str, Any]:
 
     return payload  # caller can inspect sub, roles, user_id, etc.
 
-def require_role(required: str) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
-    
-    def dependency(current: Dict[str, Any] = Depends(get_current_user)) -> Dict[str, Any]:
-        roles = current.get("roles") or ([current.get("role")] if current.get("role") else [])
-        
-        if isinstance(roles, str):
-            roles_list = [roles]
+
+def require_role(*required_roles: str):
+    if not required_roles:
+        raise ValueError("At least one role must be specified")
+
+    def dependency(current_user: dict = Depends(get_current_user)):
+        # Support common claim names: roles, role, scope, permissions, etc.
+        roles_claim = (
+            current_user.get("roles") or
+            current_user.get("role") or
+            current_user.get("permissions") or
+            current_user.get("scope", "").split()
+        )
+
+        if isinstance(roles_claim, str):
+            user_roles = roles_claim.split()  # support space-separated
         else:
-            roles_list = list(roles)
-        if required not in roles_list:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient role")
-        
-        return current
-    
+            user_roles = list(roles_claim or [])
+
+        if not any(role in required_roles for role in user_roles):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Requires role(s): {', '.join(required_roles)}. You have: {user_roles or 'none'}"
+            )
+        return current_user
+
     return dependency
