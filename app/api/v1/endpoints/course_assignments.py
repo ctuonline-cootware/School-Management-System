@@ -1,9 +1,9 @@
 # app/routers/course_assignments.py
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.core.security import get_current_user, require_role
 from app.db.session import get_db
-from app.models.sqlalchemy_models import CourseAssignment as CourseAssignmentModel
+from app.models.sqlalchemy_models import CourseAssignment as CourseAssignmentModel, Assignment as AssignmentModel
 from app.schemas.generated_models import CourseAssignment, CourseAssignmentCreate, CourseAssignmentUpdate
 
 router = APIRouter()
@@ -11,7 +11,12 @@ router = APIRouter()
 # get a list of all course_assignments (filtering can happen on the front end)
 @router.get("/", response_model=list[CourseAssignment], dependencies=[Depends(get_current_user)])
 def list_course_assignments(db: Session = Depends(get_db)):
-    return db.query(CourseAssignmentModel).all()
+    return db.query(CourseAssignmentModel).options(joinedload(CourseAssignmentModel.assignment)).all()
+
+# get a list of all course_assignments by student
+@router.get("/{student_id}", response_model=list[CourseAssignment], dependencies=[Depends(get_current_user)])
+def list_course_assignments_by_student(student_id: int, db: Session = Depends(get_db)):
+    return db.query(CourseAssignmentModel).options(joinedload(CourseAssignmentModel.assignment)).where(CourseAssignmentModel.student_id == student_id).all()
 
 # get a specific course_assignment by ID - used to provide details for review or editing
 @router.get("/{course_assignment_id}", response_model=CourseAssignment, dependencies=[Depends(get_current_user)])

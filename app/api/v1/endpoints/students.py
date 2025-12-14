@@ -1,6 +1,6 @@
 # app/routers/student.py
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.core.security import get_current_user, require_role
 from app.db.session import get_db
 from app.models.sqlalchemy_models import Student as StudentModel
@@ -11,7 +11,10 @@ router = APIRouter()
 # get a list of all students (filtering can happen on the front end)
 @router.get("/", response_model=list[Student], dependencies=[Depends(get_current_user)])
 def list_students(db: Session = Depends(get_db)):
-    return db.query(StudentModel).all()
+    #return db.query(StudentModel).all()
+
+    return db.query(StudentModel).options(joinedload(StudentModel.course_instances), 
+                                          joinedload(StudentModel.program)).all()
 
 # get a specific student by ID - used to provide details for review or editing
 @router.get("/{student_id}", response_model=Student, dependencies=[Depends(get_current_user)])
