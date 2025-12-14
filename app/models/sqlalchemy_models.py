@@ -1,7 +1,7 @@
 from typing import Optional
 import datetime
 
-from sqlalchemy import Boolean, Column, Date, ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Table, Text, UniqueConstraint, text
+from sqlalchemy import Boolean, Column, Date, ForeignKey, ForeignKeyConstraint, Integer, PrimaryKeyConstraint, String, Table, Text, UniqueConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 class Base(DeclarativeBase):
@@ -157,6 +157,13 @@ t_user_roles = Table(
     schema='school'
 )
 
+course_instance_student = Table(
+    "course_instance_student",
+    Base.metadata,
+    Column("instance_id", Integer, ForeignKey("school.course_instance.instance_id"), primary_key=True),
+    Column("student_id", Integer, ForeignKey("school.student.student_id"), primary_key=True),
+    schema="school"
+)
 
 class CourseInstance(Base):
     __tablename__ = 'course_instance'
@@ -179,6 +186,13 @@ class CourseInstance(Base):
     faculty: Mapped['Faculty'] = relationship('Faculty', back_populates='course_instance')
     course_assignment: Mapped[list['CourseAssignment']] = relationship('CourseAssignment', back_populates='instance')
 
+    students: Mapped[list["Student"]] = relationship(
+        "Student",
+        secondary=course_instance_student,
+        back_populates="course_instances"
+    )
+
+
 
 class ProgramCourseRequirement(Base):
     __tablename__ = 'program_course_requirement'
@@ -197,8 +211,6 @@ class ProgramCourseRequirement(Base):
 
     course: Mapped['Course'] = relationship('Course', back_populates='program_course_requirement')
     program: Mapped['AcademicProgram'] = relationship('AcademicProgram', back_populates='program_course_requirement')
-
-
 class Student(Base):
     __tablename__ = 'student'
     __table_args__ = (
@@ -218,6 +230,13 @@ class Student(Base):
 
     program: Mapped['AcademicProgram'] = relationship('AcademicProgram', back_populates='student')
     course_assignment: Mapped[list['CourseAssignment']] = relationship('CourseAssignment', back_populates='student')
+
+    course_instances: Mapped[list["CourseInstance"]] = relationship(
+        "CourseInstance",
+        secondary=course_instance_student,
+        back_populates="students"
+    )
+
 
 
 class CourseAssignment(Base):
