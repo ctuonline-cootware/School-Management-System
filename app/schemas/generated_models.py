@@ -190,6 +190,8 @@ class StudentBase(BaseModel):
     end_date: Optional[datetime]
     email_address: Optional[str]
 
+    course_instances: List["CourseInstanceBase"] = []  # NEW: nested course instances
+    program: Optional[AcademicProgramBase]  # NEW: nested program details
 class StudentCreate(StudentBase):
     pass
 
@@ -253,5 +255,9 @@ class CourseAssignmentUpdate(BaseModel):
 
 class CourseAssignment(CourseAssignmentBase):
     course_assignment_id: int
+    assignment: Optional[Assignment]  # NEW: nested assignment details
     class Config:
         orm_mode = True
+
+Student.model_rebuild()
+CourseInstance.model_rebuild()
