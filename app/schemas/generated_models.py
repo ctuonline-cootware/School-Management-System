@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Any
+from typing import List, Optional, Any
 from datetime import datetime
 
 class AssignmentBase(BaseModel):
@@ -161,30 +161,6 @@ class Faculty(FacultyBase):
     class Config:
         orm_mode = True
 
-class CourseInstanceBase(BaseModel):
-    course_id: int
-    faculty_id: int
-    term: str
-    start_date: datetime
-    location: str
-    end_date: Optional[datetime]
-
-class CourseInstanceCreate(CourseInstanceBase):
-    pass
-
-class CourseInstanceUpdate(BaseModel):
-    course_id: Optional[int] = None
-    faculty_id: Optional[int] = None
-    term: Optional[str] = None
-    start_date: Optional[datetime] = None
-    location: Optional[str] = None
-    end_date: Optional[datetime] = None
-
-class CourseInstance(CourseInstanceBase):
-    instance_id: int
-    class Config:
-        orm_mode = True
-
 class ProgramCourseRequirementBase(BaseModel):
     program_id: int
     course_id: int
@@ -228,6 +204,33 @@ class StudentUpdate(BaseModel):
 
 class Student(StudentBase):
     student_id: int
+    class Config:
+        orm_mode = True
+
+
+class CourseInstanceBase(BaseModel):
+    course_id: int
+    faculty_id: int
+    term: str
+    start_date: datetime
+    location: str
+    end_date: Optional[datetime]
+
+class CourseInstanceCreate(CourseInstanceBase):
+    pass
+
+class CourseInstanceUpdate(BaseModel):
+    course_id: Optional[int] = None
+    faculty_id: Optional[int] = None
+    term: Optional[str] = None
+    start_date: Optional[datetime] = None
+    location: Optional[str] = None
+    end_date: Optional[datetime] = None
+
+class CourseInstance(CourseInstanceBase):
+    instance_id: int
+    # NEW: nested students
+    students: List[Student] = []    
     class Config:
         orm_mode = True
 
