@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.endpoints import (
     academic_programs, 
     assignments,
@@ -22,6 +23,21 @@ app = FastAPI(
     redoc_url="/redoc",          # ReDoc (default)
     openapi_url="/openapi.json", # OpenAPI schema URL
 )
+
+origins = [
+    "http://localhost:4200",  # Angular dev server
+    # add other origins if needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(academic_programs.router, prefix="/academic_programs", tags=["academic_programs"])
