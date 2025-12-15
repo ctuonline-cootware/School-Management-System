@@ -1,0 +1,102 @@
+<h2>Admin – Students</h2>
+
+<div class="students-layout">
+  <section class="students-form">
+    <h3>{{ isEditMode ? 'Edit Student' : 'Create Student' }}</h3>
+
+    <form [formGroup]="studentForm" (ngSubmit)="submitForm()">
+      <div class="form-field">
+        <label for="firstName">First Name</label>
+        <input
+          id="firstName"
+          type="text"
+          formControlName="firstName"
+        />
+        <div class="error" *ngIf="firstName?.invalid && (firstName?.dirty || firstName?.touched)">
+          <span *ngIf="firstName?.errors?.['required']">First name is required.</span>
+          <span *ngIf="firstName?.errors?.['maxlength']">Max 20 characters.</span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="lastName">Last Name</label>
+        <input
+          id="lastName"
+          type="text"
+          formControlName="lastName"
+        />
+        <div class="error" *ngIf="lastName?.invalid && (lastName?.dirty || lastName?.touched)">
+          <span *ngIf="lastName?.errors?.['required']">Last name is required.</span>
+          <span *ngIf="lastName?.errors?.['maxlength']">Max 30 characters.</span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+        />
+        <div class="error" *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+          <span *ngIf="email?.errors?.['required']">Email is required.</span>
+          <span *ngIf="email?.errors?.['email']">Enter a valid email address.</span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="status">Status</label>
+        <select id="status" formControlName="status">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">
+          {{ isEditMode ? 'Update Student' : 'Create Student' }}
+        </button>
+        <button type="button" (click)="startCreate()" *ngIf="isEditMode">
+          Cancel Edit
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="students-table">
+    <h3>Existing Students</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th style="width: 140px;">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let s of students">
+          <td>{{ s.id }}</td>
+          <td>{{ s.firstName }}</td>
+          <td>{{ s.lastName }}</td>
+          <td>{{ s.email }}</td>
+          <td>{{ s.status }}</td>
+          <td class="actions">
+            <button type="button" (click)="startEdit(s)">Edit</button>
+            <button type="button" (click)="deleteStudent(s)">Delete</button>
+          </td>
+        </tr>
+
+        <tr *ngIf="students.length === 0">
+          <td colspan="6" class="empty">
+            No students yet. Use the form to add one.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
