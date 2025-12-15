@@ -33,7 +33,7 @@ export class SchoolManagementService {
 
   createAcademicProgram(payload: AcademicProgramCreate): Observable<AcademicProgram> {
     // POST /academic_programs/ 
-    return of(); // Placeholder implementation
+    return this.http.post<AcademicProgram>(this.baseUrl + "/academic_programs", payload);
   }
 
   getAcademicProgram(id: number): Observable<AcademicProgram> {
@@ -43,7 +43,7 @@ export class SchoolManagementService {
  
   updateAcademicProgram(id: number, payload: AcademicProgramUpdate): Observable<AcademicProgram> {
       // PUT /academic_programs/{academic_program_id}
-      return of(); // Placeholder implementation
+      return this.http.put<AcademicProgram>(this.baseUrl + "/academic_programs/" + id, payload);
   }
 
   // GET /assignments/ 
