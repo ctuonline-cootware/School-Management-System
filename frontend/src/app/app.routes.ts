@@ -10,6 +10,7 @@ export const routes: Routes = [
   {
     path: "",
     component: AppShellLayoutComponent,
+    canActivate: [AuthGuard],
     children: [
         {
         path: "admin",
@@ -21,14 +22,14 @@ export const routes: Routes = [
         {
         path: "faculty",
         canActivate: [AuthGuard],
-        data: { roles: ["faculty"] },
+        data: { roles: ["faculty", "admin"] },
         loadChildren: () =>
             import("./faculty/faculty.module").then((m) => m.FacultyModule),
         },
         {
         path: "student",
         canActivate: [AuthGuard],
-        data: { roles: ["student"] },
+        data: { roles: ["student", "admin"] },
         loadChildren: () =>
             import("./student/student.module").then((m) => m.StudentModule),
         },
