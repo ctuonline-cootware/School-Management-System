@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { SchoolManagementService } from '../../school-management.service';
 import { Faculty } from '../../../types/aliases';
 
 @Component({
-  selector: 'app-admin-faculty-list',
+  selector: 'app-admin-faculty',
   standalone: true,
-  imports: [CommonModule, RouterModule],
-  templateUrl: './admin-faculty-list.component.html',
-  styleUrl: './admin-faculty-list.component.scss',
+  imports: [CommonModule],
+  templateUrl: './admin-faculty.component.html',
+  styleUrl: './admin-faculty.component.scss'
 })
-export class AdminFacultyListComponent implements OnInit {
+export class AdminFacultyComponent implements OnInit {
   faculty$!: Observable<Faculty[]>;
 
   constructor(private sms: SchoolManagementService) {}

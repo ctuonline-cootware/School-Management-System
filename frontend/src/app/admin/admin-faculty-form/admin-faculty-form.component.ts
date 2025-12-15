@@ -1,74 +1,132 @@
-import { Component } from "@angular/core";
-import { SchoolManagementService } from "../../school-management.service";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { FacultyCreate, Job } from "../../../types/aliases";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { SchoolManagementService } from '../../school-management.service';
+import { FacultyCreate, FacultyUpdate } from '../../../types/aliases';
 
 @Component({
-  selector: "app-admin-faculty-form",
-
-
-  templateUrl: "./admin-faculty-form.component.html",
-  styleUrls: ["./admin-faculty-form.component.scss"]
+  selector: 'app-admin-faculty-form',
+  templateUrl: './admin-faculty-form.component.html',
+  styleUrls: ['./admin-faculty-form.component.scss'],
 })
-export class AdminFacultyFormComponent {
-  facultyForm: FormGroup;
-  readonly departments$ = this.service.listDepartments();
-  readonly jobs$ = this.service.listJobs();
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
-  
-  constructor(private service: SchoolManagementService, private fb: FormBuilder) {
-    this.facultyForm = this.buildFormGroup();
-  }  
+export class AdminFacultyFormComponent implements OnInit {
+  saving = false;
+  error = '';
+  isEdit = false;
+  facultyId: number | null = null;
 
-  buildFormGroup(): FormGroup {
-    return this.fb.group({
-      firstName: ["", Validators.required],
-      lastName: ["", Validators.required],
-      department_id: [0, [Validators.required, Validators.min(1)]],
-      job_id: [0, [Validators.required, Validators.min(1)]],
-      hire_date: ["", Validators.required]
-    });
+  form = this.fb.group({
+    first_name: ['', Validators.required],
+    last_name: ['', Validators.required],
+    email_address: ['', [Validators.required, Validators.email]],
+    department_id: [1, [Validators.required, Validators.min(1)]],
+    job_id: [1, [Validators.required, Validators.min(1)]],
+    hire_date: ['', Validators.required], // yyyy-mm-dd
+    term_date: [''], // optional yyyy-mm-dd
+  });
+
+  constructor(
+    private fb: FormBuilder,
+    private sms: SchoolManagementService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
+
+    if (idParam) {
+      // EDIT mode
+      this.isEdit = true;
+      this.facultyId = Number(idParam);
+
+      this.sms.getFaculty(this.facultyId).subscribe({
+        next: (f) => {
+          this.form.patchValue({
+            first_name: f.first_name,
+            last_name: f.last_name,
+            email_address: f.email_address,
+            department_id: f.department_id,
+            job_id: f.job_id,
+            hire_date: (f.hire_date ?? '').toString().slice(0, 10),
+            term_date: f.term_date ? f.term_date.toString().slice(0, 10) : '',
+          });
+        },
+        error: (err: any) => {
+          this.error = err?.error?.detail
+            ? JSON.stringify(err.error.detail)
+            : 'Failed to load faculty';
+        },
+      });
+    } else {
+      // CREATE mode
+      this.isEdit = false;
+      this.facultyId = null;
+    }
   }
 
-  resetForm(): void { 
-    this.facultyForm.reset({ department_id: 0, job_id: 0 });
-    this.successMessage = null;
-    this.errorMessage = null;
-  }
+  submit(): void {
+    this.error = '';
 
-  submitForm(): void {
-    this.successMessage = null;
-    this.errorMessage = null;
-
-    if (this.facultyForm.invalid) {
-      this.facultyForm.markAllAsTouched();
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    if (this.facultyForm.valid) {
-      let email = this.facultyForm.value.firstName.toLowerCase() + "." + this.facultyForm.value.lastName.toLowerCase() + "@university.edu";
-      
-      let model: FacultyCreate = {
-        "first_name": this.facultyForm.value.firstName,
-        "last_name": this.facultyForm.value.lastName,
-        "hire_date": new Date(this.facultyForm.value.hire_date).toISOString().split('T')[0],
-        "department_id": this.facultyForm.value.department_id, 
-        "job_id": this.facultyForm.value.job_id,
-        "term_date": null,
-        "email_address": email
-      }
-      
-      this.service.createFaculty(model).subscribe(response => {
-        this.successMessage = 'Faculty added successfully.';
-        let timer = setTimeout(() => { 
-          this.resetForm();
-          clearTimeout(timer);
-        }, 2000);
-      }, error => {
-        this.errorMessage = 'Error adding faculty. Please try again.';
-        console.error("Error adding faculty", error);
+    const v = this.form.value;
+    this.saving = true;
+
+    if (this.isEdit && this.facultyId) {
+      const payload: FacultyUpdate = {
+        first_name: v.first_name!,
+        last_name: v.last_name!,
+        email_address: v.email_address!,
+        department_id: Number(v.department_id),
+        job_id: Number(v.job_id),
+        hire_date: v.hire_date!,
+        term_date: v.term_date ? v.term_date : null,
+      };
+
+      this.sms.updateFaculty(this.facultyId, payload).subscribe({
+        next: () => {
+          this.saving = false;
+          this.router.navigate(['/admin/faculty']);
+        },
+        error: (err: any) => {
+          this.saving = false;
+          this.error = err?.error?.detail
+            ? JSON.stringify(err.error.detail)
+            : 'Update failed';
+        },
+      });
+    } else {
+      const payload: FacultyCreate = {
+        first_name: v.first_name!,
+        last_name: v.last_name!,
+        email_address: v.email_address!,
+        department_id: Number(v.department_id),
+        job_id: Number(v.job_id),
+        hire_date: v.hire_date!,
+        term_date: v.term_date ? v.term_date : null,
+      };
+
+      this.sms.createFaculty(payload).subscribe({
+        next: () => {
+          this.saving = false;
+          this.router.navigate(['/admin/faculty']);
+        },
+        error: (err: any) => {
+          this.saving = false;
+          this.error = err?.error?.detail
+            ? JSON.stringify(err.error.detail)
+            : 'Create failed';
+        },
       });
     }
+  }
+
+  cancel(): void {
+    this.router.navigate(['/admin/faculty']);
   }
 }
