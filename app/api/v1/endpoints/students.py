@@ -1,4 +1,5 @@
 # app/routers/student.py
+import datetime
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 from app.core.security import get_current_user, require_role
@@ -27,7 +28,14 @@ def get_student(student_id: int, db: Session = Depends(get_db)):
 # create a new student - restricted to the admin role
 @router.post("/", response_model=Student, dependencies=[Depends(require_role("admin"))])
 def create_student(payload: StudentCreate, db: Session = Depends(get_db)):
-    obj = StudentModel(**payload.model_dump())
+    obj = StudentModel(
+        first_name=payload.first_name,
+        last_name=payload.last_name,
+        email_address=payload.email_address,
+        expected_graduation_date=payload.expected_graduation_date,
+        start_date=payload.start_date,
+        program_id=payload.program_id   
+    )
     db.add(obj)
     db.commit()
     db.refresh(obj)

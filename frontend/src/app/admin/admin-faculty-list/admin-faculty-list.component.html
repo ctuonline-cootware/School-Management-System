@@ -1,1 +1,38 @@
-<p>admin-faculty-list works!</p>
+<div class="faculty-container">
+  <div class="faculty-header">
+    <h2>Faculty</h2>
+    <a href="/admin/faculty/new" class="btn btn-primary">Add New Faculty</a>
+  </div>
+
+  <div class="faculty-table-wrapper">
+    <table class="faculty-table" *ngIf="(faculty$ | async) as faculty">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email Address</th>
+          <th>Department ID</th>
+          <th>Job ID</th>
+          <th>Hire Date</th>
+          <th>Term Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of faculty">
+          <td>{{ member.first_name }}</td>
+          <td>{{ member.last_name }}</td>
+          <td>{{ member.email_address }}</td>
+          <td>{{ member.department_id || 'N/A' }}</td>
+          <td>{{ member.job_id || 'N/A' }}</td>
+          <td>{{ member.hire_date | date: 'MM/dd/yyyy' }}</td>
+          <td>{{ member.term_date | date: 'MM/dd/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="(faculty$ | async) as faculty" [hidden]="faculty.length > 0">
+      <p>No faculty found.</p>
+      <a href="/admin/faculty/new" class="btn btn-primary">Add the first faculty member</a>
+    </div>
+  </div>
+</div>

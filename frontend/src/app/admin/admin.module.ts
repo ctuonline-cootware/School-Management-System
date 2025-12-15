@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from "@angular/router";
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AdminDashboardComponent } from "./admin-dashboard/admin-dashboard.component";
 import { AdminStudentsListComponent } from "./admin-students-list/admin-students-list.component";
@@ -12,6 +13,8 @@ import { AdminFacultyFormComponent } from "./admin-faculty-form/admin-faculty-fo
 import { AdminClassesListComponent } from "./admin-classes-list/admin-classes-list.component";
 import { AdminClassDetailComponent } from "./admin-class-detail/admin-class-detail.component";
 import { AdminClassAssignmentsComponent } from "./admin-class-assignments/admin-class-assignments.component";
+import { AdminClassInstanceListComponent } from './admin-class-instance-list/admin-class-instance-list.component';
+import { AdminClassInstanceFormComponent } from './admin-class-instance-form/admin-class-instance-form.component';
 
 const routes: Routes = [
   { path: "", component: AdminDashboardComponent },
@@ -25,7 +28,10 @@ const routes: Routes = [
   { path: "faculty/new", component: AdminFacultyFormComponent },
   { path: "faculty/:id/edit", component: AdminFacultyFormComponent },
   { path: "classes", component: AdminClassesListComponent },
-  { path: "classes/:id", component: AdminClassDetailComponent },
+  { path: "classes/new", component: AdminClassDetailComponent },
+  { path: "class-instances", component: AdminClassInstanceListComponent },
+  { path: "class-instances/new", component: AdminClassInstanceFormComponent },
+  { path: "classes/new", component: AdminClassDetailComponent },
   { path: "classes/:id/assignments", component: AdminClassAssignmentsComponent },
 ];
 
@@ -41,7 +47,9 @@ const routes: Routes = [
     AdminClassesListComponent,
     AdminClassDetailComponent,
     AdminClassAssignmentsComponent,
+    AdminClassInstanceListComponent,
+    AdminClassInstanceFormComponent
   ],
-  imports: [CommonModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, RouterModule.forChild(routes), ReactiveFormsModule],
 })
 export class AdminModule {}

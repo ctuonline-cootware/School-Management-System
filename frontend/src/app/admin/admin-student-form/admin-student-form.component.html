@@ -1,2 +1,46 @@
-<p>admin-student-form works!</p>
-<p>This should create a new user and a new student object on submission</p>
+<div class="student-form-container">
+	<h2>Add New Student</h2>
+
+	<form [formGroup]="studentForm" (ngSubmit)="submitForm()" novalidate>
+		<div *ngIf="successMessage" class="alert alert-success" role="status">{{ successMessage }}</div>
+		<div *ngIf="errorMessage" class="alert alert-error" role="alert">{{ errorMessage }}</div>
+
+		<div class="form-group">
+			<label for="firstName">First Name:</label>
+			<input id="firstName" type="text" formControlName="firstName" placeholder="Enter first name" />
+			<div class="field-error" *ngIf="studentForm.get('firstName')?.touched && studentForm.get('firstName')?.hasError('required')">First name is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="lastName">Last Name:</label>
+			<input id="lastName" type="text" formControlName="lastName" placeholder="Enter last name" />
+			<div class="field-error" *ngIf="studentForm.get('lastName')?.touched && studentForm.get('lastName')?.hasError('required')">Last name is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="startDate">Start Date:</label>
+			<input id="startDate" type="date" formControlName="startDate" />
+			<div class="field-error" *ngIf="studentForm.get('startDate')?.touched && studentForm.get('startDate')?.hasError('required')">Start date is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="expectedGraduationDate">Expected Graduation Date:</label>
+			<input id="expectedGraduationDate" type="date" formControlName="expectedGraduationDate" />
+			<div class="field-error" *ngIf="studentForm.get('expectedGraduationDate')?.touched && studentForm.get('expectedGraduationDate')?.hasError('required')">Expected graduation date is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="programId">Program:</label>
+			<select id="programId" formControlName="programId">
+				<option value="0" disabled>Select a program</option>
+				<option *ngFor="let prog of programs$ | async" [value]="prog.program_id">{{ prog.name }}</option>
+			</select>
+			<div class="field-error" *ngIf="studentForm.get('programId')?.touched && studentForm.get('programId')?.invalid">Please select a program.</div>
+		</div>
+
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary" [disabled]="studentForm.invalid">Add Student</button>
+			<button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+		</div>
+	</form>
+</div>

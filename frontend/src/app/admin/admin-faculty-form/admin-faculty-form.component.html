@@ -1,2 +1,49 @@
-<p>admin-faculty-form works!</p>
-<p>This should create a new user and a new faculty object on submission</p>
+<div class="faculty-form-container">
+	<h2>Add New Faculty</h2>
+  
+	<form [formGroup]="facultyForm" (ngSubmit)="submitForm()" novalidate>
+		<div *ngIf="successMessage" class="alert alert-success" role="status">{{ successMessage }}</div>
+		<div *ngIf="errorMessage" class="alert alert-error" role="alert">{{ errorMessage }}</div>
+
+		<div class="form-group">
+			<label for="firstName">First Name:</label>
+			<input id="firstName" type="text" formControlName="firstName" placeholder="Enter first name" />
+			<div class="field-error" *ngIf="facultyForm.get('firstName')?.touched && facultyForm.get('firstName')?.hasError('required')">First name is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="lastName">Last Name:</label>
+			<input id="lastName" type="text" formControlName="lastName" placeholder="Enter last name" />
+			<div class="field-error" *ngIf="facultyForm.get('lastName')?.touched && facultyForm.get('lastName')?.hasError('required')">Last name is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="department_id">Department:</label>
+			<select id="department_id" formControlName="department_id">
+				<option value="0" disabled>Select a department</option>
+				<option *ngFor="let dept of departments$ | async" [value]="dept.department_id">{{ dept.name }}</option>
+			</select>
+			<div class="field-error" *ngIf="facultyForm.get('department_id')?.touched && facultyForm.get('department_id')?.invalid">Please select a department.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="job_id">Job:</label>
+			<select id="job_id" formControlName="job_id">
+				<option value="0" disabled>Select a job</option>
+				<option *ngFor="let job of jobs$ | async" [value]="job.job_id">{{ job.name }}</option>
+			</select>
+			<div class="field-error" *ngIf="facultyForm.get('job_id')?.touched && facultyForm.get('job_id')?.invalid">Please select a job.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="hire_date">Hire Date:</label>
+			<input id="hire_date" type="date" formControlName="hire_date" />
+			<div class="field-error" *ngIf="facultyForm.get('hire_date')?.touched && facultyForm.get('hire_date')?.hasError('required')">Hire date is required.</div>
+		</div>
+
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary" [disabled]="facultyForm.invalid">Add Faculty</button>
+			<button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+		</div>
+	</form>
+</div>

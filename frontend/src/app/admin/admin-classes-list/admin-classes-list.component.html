@@ -1,1 +1,38 @@
-<p>admin-classes-list works!</p>
+<div class="classes-container">
+  <div class="classes-header">
+    <h2>Classes</h2>
+    <a href="/admin/classes/new" class="btn btn-primary">Add New Class</a>
+  </div>
+
+  <div class="classes-table-wrapper">
+    <table class="classes-table" *ngIf="(classes$ | async) as classes">
+      <thead>
+        <tr>
+          <th>Course ID</th>
+          <th>Name</th>
+          <th>Code</th>
+          <th>Credits</th>
+          <th>Description</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let courseClass of classes">
+          <td>{{ courseClass.course_id || 'N/A' }}</td>
+          <td>{{ courseClass.name || 'N/A' }}</td>
+          <td>{{ courseClass.code || 'N/A' }}</td>
+          <td>{{ courseClass.credits || 'N/A' }}</td>
+          <td>{{ courseClass.description || 'N/A' }}</td>
+          <td>{{ courseClass.start_date | date: 'MM/dd/yyyy' }}</td>
+          <td>{{ courseClass.end_date | date: 'MM/dd/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="(classes$ | async) as classes" [hidden]="classes.length > 0">
+      <p>No classes found.</p>
+      <a href="/admin/classes/new" class="btn btn-primary">Add the first class</a>
+    </div>
+  </div>
+</div>

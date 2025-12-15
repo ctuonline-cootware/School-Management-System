@@ -45,7 +45,7 @@ app.include_router(assignments.router, prefix="/assignments", tags=["assignments
 app.include_router(course_assignments.router, prefix="/course_assignments", tags=["course_assignments"])
 app.include_router(course_instances.router, prefix="/course_instances", tags=["course_instances"])
 app.include_router(courses.router, prefix="/courses", tags=["courses"])
-app.include_router(departments.router, prefix="/deparments", tags=["deparments"])
+app.include_router(departments.router, prefix="/departments", tags=["departments"])
 app.include_router(faculty.router, prefix="/faculty", tags=["faculty"])
 app.include_router(jobs.router, prefix="/jobs", tags=["jobs"])
 app.include_router(program_course_requirements.router, prefix="/program_course_requirements", tags=["program_course_requirements"])

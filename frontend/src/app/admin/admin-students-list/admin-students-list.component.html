@@ -1,1 +1,34 @@
-<p>admin-students-list works!</p>
+<div class="students-container">
+  <div class="students-header">
+    <h2>Students</h2>
+    <a href="/admin/students/new" class="btn btn-primary">Add New Student</a>
+  </div>
+
+  <div class="students-table-wrapper">
+    <table class="students-table" *ngIf="(students$ | async) as students">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Program</th>
+          <th>Start Date</th>
+          <th>Expected Graduation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of students">
+          <td>{{ student.first_name }}</td>
+          <td>{{ student.last_name }}</td>
+          <td><span class="badge">{{ student.program?.name || 'N/A' }}</span></td>
+          <td>{{ student.start_date | date: 'MM/dd/yyyy' }}</td>
+          <td>{{ student.expected_graduation_date | date: 'MM/dd/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="(students$ | async) as students" [hidden]="students.length > 0">
+      <p>No students found.</p>
+      <a href="/admin/students/new" class="btn btn-primary">Add the first student</a>
+    </div>
+  </div>
+</div>

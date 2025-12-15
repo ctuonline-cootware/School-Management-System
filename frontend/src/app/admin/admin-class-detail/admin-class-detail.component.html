@@ -1,1 +1,44 @@
-<p>admin-class-detail works!</p>
+<div class="course-form-container">
+	<h2>Add New Course</h2>
+
+	<form [formGroup]="courseForm" (ngSubmit)="submitForm()" novalidate>
+		<div *ngIf="successMessage" class="alert alert-success" role="status">{{ successMessage }}</div>
+		<div *ngIf="errorMessage" class="alert alert-error" role="alert">{{ errorMessage }}</div>
+
+		<div class="form-group">
+			<label for="name">Course Name:</label>
+			<input id="name" type="text" formControlName="name" placeholder="Enter course name" />
+			<div class="field-error" *ngIf="courseForm.get('name')?.touched && courseForm.get('name')?.hasError('required')">Course name is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="code">Course Code:</label>
+			<input id="code" type="text" formControlName="code" placeholder="Enter course code (e.g., CS101)" />
+			<div class="field-error" *ngIf="courseForm.get('code')?.touched && courseForm.get('code')?.hasError('required')">Course code is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="description">Description:</label>
+			<input id="description" type="text" formControlName="description" placeholder="Enter course description" />
+			<div class="field-error" *ngIf="courseForm.get('description')?.touched && courseForm.get('description')?.hasError('required')">Description is required.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="credits">Credits:</label>
+			<input id="credits" type="number" formControlName="credits" min="0" max="12" />
+			<div class="field-error" *ngIf="courseForm.get('credits')?.touched && courseForm.get('credits')?.hasError('required')">Credits is required.</div>
+			<div class="field-error" *ngIf="courseForm.get('credits')?.touched && courseForm.get('credits')?.hasError('min')">Credits must be greater than or equal to 0.</div>
+		</div>
+
+		<div class="form-group">
+			<label for="startDate">Start Date:</label>
+			<input id="startDate" type="date" formControlName="start_date" />
+			<div class="field-error" *ngIf="courseForm.get('start_date')?.touched && courseForm.get('start_date')?.hasError('required')">Start date is required.</div>
+		</div>
+
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary" [disabled]="courseForm.invalid">Add Course</button>
+			<button type="button" class="btn btn-secondary" (click)="resetForm()">Reset</button>
+		</div>
+	</form>
+</div>
