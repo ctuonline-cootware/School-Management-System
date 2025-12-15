@@ -159,14 +159,14 @@ export class SchoolManagementService {
   }
 
 
-  // GET /faculty/ 
+  // GET /faculty/
   listFaculty(): Observable<Faculty[]> { 
-    return this.http.get<Faculty[]>(this.baseUrl + "/faculty");
+    return this.http.get<Faculty[]>(this.baseUrl + "/faculty/");
   }
 
   // POST /faculty/ 
   createFaculty(payload: FacultyCreate): Observable<Faculty> { 
-    return this.http.post<Faculty>(this.baseUrl + "/faculty", payload);
+    return this.http.post<Faculty>(this.baseUrl + "/faculty/", payload);
   }
 
   // GET /faculty/{faculty_id} 
