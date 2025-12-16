@@ -1,0 +1,44 @@
+.top-nav {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  background: #3f51b5;
+  color: white;
+
+  .logo {
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  a {
+    margin-right: 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  button {
+    background: white;
+    color: #3f51b5;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background: #e8e8e8;
+    }
+  }
+}
+
+.content {
+  padding: 20px;
+}

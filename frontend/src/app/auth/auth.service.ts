@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { tap } from "rxjs/operators";
+import { tap, map } from "rxjs/operators";
 import { jwtDecode } from "jwt-decode";
+
+export type UserRole = "admin" | "faculty" | "student";
 
 interface TokenPayload {
   sub: string;
@@ -18,21 +20,34 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string) {
-    const body = new URLSearchParams();
-    body.set("username", username);
-    body.set("password", password);
+login(username: string, password: string) {
+  const body = new URLSearchParams();
+  body.set("grant_type", "password");  // ✅ required for OAuth2PasswordRequestForm
+  body.set("username", username);
+  body.set("password", password);
+  body.set("scope", "");              // optional, matches Swagger
 
-    return this.http
-      .post<any>(this.apiUrl, body.toString(), {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  return this.http
+    .post<{ access_token: string; token_type: string }>(this.apiUrl, body.toString(), {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    })
+    .pipe(
+      tap((res) => {
+        localStorage.setItem("access_token", res.access_token);
+      }),
+      map(() => {
+        const decoded = this.getDecodedToken();
+        const roles = decoded?.roles ?? [];
+
+        const role: UserRole =
+          roles.includes("admin") ? "admin" :
+          roles.includes("faculty") ? "faculty" :
+          "student";
+
+        return { role };
       })
-      .pipe(
-        tap((res) => {
-          localStorage.setItem("access_token", res.access_token);
-        })
-      );
-  }
+    );
+}
 
   logout() {
     localStorage.removeItem("access_token");

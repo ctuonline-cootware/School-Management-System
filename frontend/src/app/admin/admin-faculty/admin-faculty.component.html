@@ -1,0 +1,37 @@
+<h2>Faculty</h2>
+
+<table *ngIf="faculty$ | async as faculty; else loading" border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>Faculty ID</th>
+      <th>First</th>
+      <th>Last</th>
+      <th>Email</th>
+      <th>Department ID</th>
+      <th>Job ID</th>
+      <th>Hire Date</th>
+      <th>Term Date</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let f of faculty">
+      <td>{{ f.faculty_id }}</td>
+      <td>{{ f.first_name }}</td>
+      <td>{{ f.last_name }}</td>
+      <td>{{ f.email_address || '' }}</td>
+      <td>{{ f.department_id }}</td>
+      <td>{{ f.job_id }}</td>
+      <td>{{ f.hire_date }}</td>
+      <td>{{ f.term_date || '' }}</td>
+    </tr>
+
+    <tr *ngIf="faculty.length === 0">
+      <td colspan="8">No faculty found.</td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #loading>
+  <p>Loading faculty…</p>
+</ng-template>

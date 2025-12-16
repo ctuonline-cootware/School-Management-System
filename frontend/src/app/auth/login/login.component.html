@@ -1,0 +1,38 @@
+<div class="login-page">
+  <h1>School Management Login</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label class="field">
+      <span>Username</span>
+      <input type="text" formControlName="username" />
+      <div class="error" *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
+        Username is required.
+      </div>
+    </label>
+
+    <label class="field">
+      <span>Password</span>
+      <input type="password" formControlName="password" />
+      <div class="error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+        Password is required.
+      </div>
+    </label>
+
+    <label class="field">
+      <span>Role (temporary for testing)</span>
+      <select formControlName="role">
+        <option value="admin">Admin</option>
+        <option value="student">Student</option>
+        <option value="faculty">Faculty</option>
+      </select>
+    </label>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Logging in…' : 'Log in' }}
+    </button>
+
+    <div class="error" *ngIf="error">
+      {{ error }}
+    </div>
+  </form>
+</div>

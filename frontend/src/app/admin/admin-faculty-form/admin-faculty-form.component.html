@@ -1,2 +1,49 @@
-<p>admin-faculty-form works!</p>
-<p>This should create a new user and a new faculty object on submission</p>
+<h2>{{ isEdit ? 'Edit Faculty' : 'New Faculty' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div>
+    <label>First Name</label>
+    <input formControlName="first_name" />
+  </div>
+
+  <div>
+    <label>Last Name</label>
+    <input formControlName="last_name" />
+  </div>
+
+  <div>
+    <label>Email</label>
+    <input formControlName="email_address" />
+  </div>
+
+  <div>
+    <label>Department ID</label>
+    <input type="number" formControlName="department_id" />
+  </div>
+
+  <div>
+    <label>Job ID</label>
+    <input type="number" formControlName="job_id" />
+  </div>
+
+  <div>
+    <label>Hire Date</label>
+    <input type="date" formControlName="hire_date" />
+  </div>
+
+  <div>
+    <label>Term Date (optional)</label>
+    <input type="date" formControlName="term_date" />
+  </div>
+
+  <div style="margin-top: 12px;">
+    <button type="submit" [disabled]="saving">
+      {{ saving ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
+    </button>
+    <button type="button" (click)="cancel()" [disabled]="saving">Cancel</button>
+  </div>
+</form>
+
+<p *ngIf="error" style="color: darkred; margin-top: 10px;">
+  {{ error }}
+</p>

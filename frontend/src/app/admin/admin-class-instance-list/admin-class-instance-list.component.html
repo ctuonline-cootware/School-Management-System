@@ -1,0 +1,47 @@
+<div class="class-instances-container">
+  <div class="class-instances-header">
+    <h2>Class Instances</h2>
+    <a routerLink="/admin/classes/instances/new" class="btn btn-primary">Add New Instance</a>
+  </div>
+<!--    
+  
+      let model = {
+        course_id: this.courseInstanceForm.value.courseId,
+        faculty_id: this.courseInstanceForm.value.facultyId,
+        term: this.courseInstanceForm.value.term,
+        start_date: new Date(this.courseInstanceForm.value.startDate).toISOString(),
+        location: this.courseInstanceForm.value.location,
+        end_date: null
+      };
+
+-->
+  <div class="class-instances-table-wrapper">
+    <table class="class-instances-table" *ngIf="(classInstances$ | async) as instances">
+      <thead>
+        <tr>
+          <th>Course ID</th>
+          <th>Faculty ID</th>
+          <th>Term</th>
+          <th>Location</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let instance of instances">
+          <td>{{ instance.course_id }}</td>
+          <td>{{ instance.faculty_id }}</td>
+          <td><span class="badge">{{ instance.term }}</span></td>
+          <td>{{ instance.location }}</td>
+          <td>{{ instance.start_date | date: 'short' }}</td>
+          <td>{{ instance.end_date | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="(classInstances$ | async) as instances" [hidden]="instances.length > 0">
+      <p>No class instances found.</p>
+      <a routerLink="/admin/classes/instances/new" class="btn btn-primary">Add the first instance</a>
+    </div>
+  </div>
+</div>

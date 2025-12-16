@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SchoolManagementService } from '../../school-management.service';
 
 @Component({
   selector: 'app-admin-students-list',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./admin-students-list.component.scss']
 })
 export class AdminStudentsListComponent {
-
+  readonly students$ = this.service.listStudents();
+  constructor(private service: SchoolManagementService) { }
 }

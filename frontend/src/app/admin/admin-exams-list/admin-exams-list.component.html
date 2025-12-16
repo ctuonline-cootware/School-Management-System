@@ -1,1 +1,35 @@
-<p>admin-exams-list works!</p>
+<div class="exams-container">
+  <div class="exams-header">
+    <h2>Assignments</h2>
+    <a href="/admin/exams/new" class="btn btn-primary">Add New Assignment</a>
+  </div>
+
+  <div class="exams-table-wrapper">
+    <table class="exams-table" *ngIf="(assignments$ | async) as assignments">
+      <thead>
+        <tr>
+          <th>Assignment</th>
+          <th>Max Points</th>
+          <th>Is Active</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let assignment of assignments$ | async">
+          <td>{{ assignment.name || 'N/A' }}</td>
+          <td>{{ assignment.max_points || '0' }}</td>
+          <td>{{ assignment.is_active || '-' }}</td>
+          <td>{{ assignment.start_date | date: 'MM/dd/yyyy' }}</td>
+          <td>{{ assignment.end_date | date: 'MM/dd/yyyy' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty-state" *ngIf="(assignments$ | async) as assignments" [hidden]="assignments.length > 0">
+      <p>No exams found.</p>
+      <a href="/admin/exams/new" class="btn btn-primary">Add the first Assignment</a>
+    </div>
+  </div>
+</div>
+

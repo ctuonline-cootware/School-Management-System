@@ -4,8 +4,18 @@ from pathlib import Path
 from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 
-env_path = Path(__file__).resolve().parents[1] / ".env"
-load_dotenv(env_path)
+# try app/.env first, then project root .env
+_here = Path(__file__).resolve()
+env_path_app = _here.parents[1] / ".env"      # app/.env
+env_path_root = _here.parents[2] / ".env"     # project_root/.env
+
+if env_path_app.exists():
+    load_dotenv(env_path_app)
+elif env_path_root.exists():
+    load_dotenv(env_path_root)
+else:
+    # fallback: rely on default behavior (no-op) so env vars from the environment are still used
+    load_dotenv()
 
 class Settings(BaseSettings):
     SECRET_KEY: str = os.getenv("SECRET_KEY", "fallback-dev-key")
