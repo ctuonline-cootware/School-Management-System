@@ -22,10 +22,31 @@ class Base(DeclarativeBase):
     pass
 
 
+user_roles = Table(
+    "user_roles",
+    Base.metadata,
+    Column("user_id", Integer, primary_key=True),
+    Column("role_id", Integer, primary_key=True),
+    ForeignKeyConstraint(["role_id"], ["school.roles.id"], name="user_roles_role_id_fkey"),
+    ForeignKeyConstraint(["user_id"], ["school.users.id"], name="user_roles_user_id_fkey"),
+    PrimaryKeyConstraint("user_id", "role_id", name="user_roles_pkey"),
+    schema="school",
+)
+
+
+course_instance_student = Table(
+    "course_instance_student",
+    Base.metadata,
+    Column("instance_id", Integer, ForeignKey("school.course_instance.instance_id"), primary_key=True),
+    Column("student_id", Integer, ForeignKey("school.student.student_id"), primary_key=True),
+    schema="school",
+)
+
 class Assignment(Base):
     __tablename__ = "assignment"
     __table_args__ = (
         PrimaryKeyConstraint("assignment_id", name="assignment_pkey"),
+        {"schema": "school"},
     )
 
     assignment_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -44,6 +65,7 @@ class Course(Base):
     __tablename__ = "course"
     __table_args__ = (
         PrimaryKeyConstraint("course_id", name="course_pkey"),
+        {"schema": "school"},
     )
 
     course_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -67,6 +89,7 @@ class Department(Base):
     __tablename__ = "department"
     __table_args__ = (
         PrimaryKeyConstraint("department_id", name="department_pkey"),
+        {"schema": "school"},
     )
 
     department_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -82,6 +105,7 @@ class Job(Base):
     __tablename__ = "job"
     __table_args__ = (
         PrimaryKeyConstraint("job_id", name="job_pkey"),
+        {"schema": "school"},
     )
 
     job_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -99,13 +123,14 @@ class Roles(Base):
     __table_args__ = (
         PrimaryKeyConstraint("id", name="roles_pkey"),
         UniqueConstraint("name", name="roles_name_key"),
+        {"schema": "school"},
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(Text, nullable=False)
 
     user: Mapped[list["Users"]] = relationship(
-        "Users", secondary="user_roles", back_populates="role"
+        "Users", secondary=user_roles, back_populates="role"
     )
 
 
@@ -114,6 +139,7 @@ class Users(Base):
     __table_args__ = (
         PrimaryKeyConstraint("id", name="users_pkey"),
         UniqueConstraint("username", name="users_username_key"),
+        {"schema": "school"},
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -122,7 +148,7 @@ class Users(Base):
     is_active: Mapped[Optional[bool]] = mapped_column(Boolean, server_default=text("true"))
 
     role: Mapped[list["Roles"]] = relationship(
-        "Roles", secondary="user_roles", back_populates="user"
+        "Roles", secondary=user_roles, back_populates="user"
     )
 
 
@@ -131,10 +157,11 @@ class AcademicProgram(Base):
     __table_args__ = (
         ForeignKeyConstraint(
             ["department"],
-            ["department.department_id"],
+            ["school.department.department_id"],
             name="academic_program_department_fkey",
         ),
         PrimaryKeyConstraint("program_id", name="academic_program_pkey"),
+        {"schema": "school"},
     )
 
     program_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -156,11 +183,12 @@ class Faculty(Base):
     __table_args__ = (
         ForeignKeyConstraint(
             ["department_id"],
-            ["department.department_id"],
+            ["school.department.department_id"],
             name="faculty_department_id_fkey",
         ),
-        ForeignKeyConstraint(["job_id"], ["job.job_id"], name="faculty_job_id_fkey"),
+        ForeignKeyConstraint(["job_id"], ["school.job.job_id"], name="faculty_job_id_fkey"),
         PrimaryKeyConstraint("faculty_id", name="faculty_pkey"),
+        {"schema": "school"},
     )
 
     faculty_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -177,37 +205,17 @@ class Faculty(Base):
     course_instance: Mapped[list["CourseInstance"]] = relationship(
         "CourseInstance", back_populates="faculty"
     )
-
-
-t_user_roles = Table(
-    "user_roles",
-    Base.metadata,
-    Column("user_id", Integer, primary_key=True),
-    Column("role_id", Integer, primary_key=True),
-    ForeignKeyConstraint(["role_id"], ["roles.id"], name="user_roles_role_id_fkey"),
-    ForeignKeyConstraint(["user_id"], ["users.id"], name="user_roles_user_id_fkey"),
-    PrimaryKeyConstraint("user_id", "role_id", name="user_roles_pkey"),
-)
-
-
-course_instance_student = Table(
-    "course_instance_student",
-    Base.metadata,
-    Column("instance_id", Integer, ForeignKey("course_instance.instance_id"), primary_key=True),
-    Column("student_id", Integer, ForeignKey("student.student_id"), primary_key=True),
-)
-
-
 class CourseInstance(Base):
     __tablename__ = "course_instance"
     __table_args__ = (
         ForeignKeyConstraint(
-            ["course_id"], ["course.course_id"], name="course_instance_course_id_fkey"
+            ["course_id"], ["school.course.course_id"], name="course_instance_course_id_fkey"
         ),
         ForeignKeyConstraint(
-            ["faculty_id"], ["faculty.faculty_id"], name="course_instance_faculty_id_fkey"
+            ["faculty_id"], ["school.faculty.faculty_id"], name="course_instance_faculty_id_fkey"
         ),
         PrimaryKeyConstraint("instance_id", name="course_instance_pkey"),
+        {"schema": "school"},
     )
 
     instance_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -236,15 +244,16 @@ class ProgramCourseRequirement(Base):
     __table_args__ = (
         ForeignKeyConstraint(
             ["course_id"],
-            ["course.course_id"],
+            ["school.course.course_id"],
             name="program_course_requirement_course_id_fkey",
         ),
         ForeignKeyConstraint(
             ["program_id"],
-            ["academic_program.program_id"],
+            ["school.academic_program.program_id"],
             name="program_course_requirement_program_id_fkey",
         ),
         PrimaryKeyConstraint("requirement_id", name="program_course_requirement_pkey"),
+        {"schema": "school"},
     )
 
     requirement_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -266,10 +275,11 @@ class Student(Base):
     __table_args__ = (
         ForeignKeyConstraint(
             ["program_id"],
-            ["academic_program.program_id"],
+            ["school.academic_program.program_id"],
             name="student_program_id_fkey",
         ),
         PrimaryKeyConstraint("student_id", name="student_pkey"),
+        {"schema": "school"},
     )
 
     student_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -298,20 +308,21 @@ class CourseAssignment(Base):
     __table_args__ = (
         ForeignKeyConstraint(
             ["assignment_id"],
-            ["assignment.assignment_id"],
+            ["school.assignment.assignment_id"],
             name="course_assignment_assignment_id_fkey",
         ),
         ForeignKeyConstraint(
             ["instance_id"],
-            ["course_instance.instance_id"],
+            ["school.course_instance.instance_id"],
             name="course_assignment_instance_id_fkey",
         ),
         ForeignKeyConstraint(
             ["student_id"],
-            ["student.student_id"],
+            ["school.student.student_id"],
             name="course_assignment_student_id_fkey",
         ),
         PrimaryKeyConstraint("course_assignment_id", name="course_assignment_pkey"),
+        {"schema": "school"},
     )
 
     course_assignment_id: Mapped[int] = mapped_column(Integer, primary_key=True)
