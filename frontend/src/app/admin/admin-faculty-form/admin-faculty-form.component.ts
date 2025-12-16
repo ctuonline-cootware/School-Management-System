@@ -112,10 +112,32 @@ export class AdminFacultyFormComponent implements OnInit {
       };
 
       this.sms.createFaculty(payload).subscribe({
-        next: () => {
-          this.saving = false;
-          this.router.navigate(['/admin/faculty']);
-        },
+          next: () => {
+            let email = payload.email_address;
+
+            if (email !== null && email !== undefined) {  
+              // Create user with faculty role (role_id = 2)
+              const userPayload = {
+                username: email,
+                password: email,
+                roles: [2],
+                is_active: true
+              };
+              
+              this.sms.createUser(userPayload).subscribe({
+                next: () => {
+                  this.saving = false;
+                  this.router.navigate(['/admin/faculty']);
+                },
+                error: (userErr: any) => {
+                  this.saving = false;
+                  this.error = 'Faculty created but user account creation failed: ' + 
+                    (userErr?.error?.detail ? JSON.stringify(userErr.error.detail) : 'Unknown error');
+                  setTimeout(() => this.router.navigate(['/admin/faculty']), 3000);
+                }
+              });
+            }
+          },
         error: (err: any) => {
           this.saving = false;
           this.error = err?.error?.detail

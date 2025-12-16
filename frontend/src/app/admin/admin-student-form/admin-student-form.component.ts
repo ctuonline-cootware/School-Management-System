@@ -57,18 +57,37 @@ export class AdminStudentFormComponent {
       };
 
       this.service.createStudent(model).subscribe({
-        next: (v) => {
-          this.successMessage = "student added successfully.";
-          let timer = setTimeout(() => { 
-            this.resetForm();
-            clearTimeout(timer);
-          }, 2000);
-        },
-        error: (e) => {
-          this.errorMessage = "Error adding student. Please try again.";
-          console.error("Error adding student", e);
-        }
-      });       
+          next: (v) => {
+            let email = model.email_address;
+
+            if (email !== null && email !== undefined) {
+              // Create user with student role (role_id = 3)
+              const userPayload = {
+                username: email,
+                password: email,
+                roles: [3],
+                is_active: true
+              };
+              this.service.createUser(userPayload).subscribe({
+                next: () => {
+                  this.successMessage = "Student added successfully.";
+                  let timer = setTimeout(() => { 
+                    this.resetForm();
+                    clearTimeout(timer);
+                  }, 2000);
+                },
+                error: (userErr: any) => {
+                  this.errorMessage = "Student created but user account creation failed. Please create user manually.";
+                  console.error("Error creating user account", userErr);
+                }
+              });
+            }
+          },
+          error: (e) => {
+            this.errorMessage = "Error adding student. Please try again.";
+            console.error("Error adding student", e);
+          }
+      });
     }
   }
 }

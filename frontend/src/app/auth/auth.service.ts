@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 
 export type UserRole = "admin" | "faculty" | "student";
 
-interface TokenPayload {
+export interface TokenPayload {
   sub: string;
   user_id: number;
   roles: string[];

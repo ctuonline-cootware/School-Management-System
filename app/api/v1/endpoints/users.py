@@ -99,7 +99,7 @@ def create_user(payload: UsersCreate, db: Session = Depends(get_db)):
     return new_user
 
 # update an existing job - restricted to the admin user
-@router.put("/{user_id}", response_model=Users, dependencies=[Depends(require_role("admin"))])
+@router.put("/{user_id}", response_model=Users, dependencies=[Depends(get_current_user)])
 def update_job(user_id: int, payload: UsersUpdate, db: Session = Depends(get_db)):
     obj = db.query(UserModel).get(user_id)
     if not obj:
