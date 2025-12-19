@@ -6,11 +6,12 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 
 
 @NgModule({
-  declarations: [AppShellLayoutComponent, LoginComponent, NotFoundComponent, UnauthorizedComponent],
+  declarations: [AppShellLayoutComponent, LoginComponent, NotFoundComponent, UnauthorizedComponent, ChangePasswordComponent],
   imports: [
     CommonModule,
     FormsModule,

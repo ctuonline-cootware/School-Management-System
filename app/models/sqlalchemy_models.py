@@ -129,8 +129,8 @@ class Roles(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(Text, nullable=False)
 
-    user: Mapped[list["Users"]] = relationship(
-        "Users", secondary=user_roles, back_populates="role"
+    users: Mapped[list["Users"]] = relationship(
+        "Users", secondary=user_roles, back_populates="roles"
     )
 
 
@@ -147,8 +147,8 @@ class Users(Base):
     password_hash: Mapped[str] = mapped_column(Text, nullable=False)
     is_active: Mapped[Optional[bool]] = mapped_column(Boolean, server_default=text("true"))
 
-    role: Mapped[list["Roles"]] = relationship(
-        "Roles", secondary=user_roles, back_populates="user"
+    roles: Mapped[list["Roles"]] = relationship(
+        "Roles", secondary=user_roles, back_populates="users"
     )
 
 

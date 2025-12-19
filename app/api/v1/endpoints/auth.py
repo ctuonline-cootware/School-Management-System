@@ -11,7 +11,7 @@ from app.models.sqlalchemy_models import Users as UsersModel
 router = APIRouter()
 
 # replace with real credential check / DB lookup
-def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
+def authenticate_user(username: str, password: str, db: Session):
     # query DB for user, verify password hash
     # return a dict/object like {"id": 1, "username": username, "roles": ["user"]}
     if username == "demo" and password == "demo":
@@ -34,12 +34,12 @@ def authenticate_user(username: str, password: str, db: Session = Depends(get_db
     return {
         "id": user.id,
         "username": user.username,
-        "roles": [role.role_name for role in user.roles]  # assuming a relationship 'roles' exists
+        "roles": [role.name for role in user.roles]  # assuming a relationship 'roles' exists
     }
 
 @router.post("/token")
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = authenticate_user(form_data.username, form_data.password, db)
     
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")

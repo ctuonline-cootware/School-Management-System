@@ -8,11 +8,17 @@
 				<li><a routerLink="/admin" routerLinkActive="active">Admin</a></li>
 			</ul>
 		</nav>
+		<div class="user-menu">
+			<button class="user-menu-toggle" (click)="toggleUserMenu()">👤 Account</button>
+			<div class="user-menu-dropdown" *ngIf="showUserMenu">
+				<a href="#" (click)="openChangePassword($event)">Change Password</a>
+				<a href="#" (click)="logout($event)">Logout</a>
+			</div>
+		</div>
 	</div>
 </header>
-
-<div class="app-shell-body container">
-	<aside class="app-shell-sidebar" role="navigation" aria-label="Module navigation">
+<div class="app-shell-body container" [ngClass]="{ 'without-sidebar': ['student', 'faculty', 'admin'].includes(currentModule) !== true}">
+    <aside class="app-shell-sidebar" role="navigation" aria-label="Module navigation" *ngIf="['student', 'faculty', 'admin'].includes(currentModule)">
 		<!-- Sidebar shows only active module's child routes -->
 
 		<ng-container *ngIf="currentModule === 'student'">
